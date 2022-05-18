@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static double sqrt(double value)
+double sqrt(double value)
 {
 	double sqrt = value / 3;
 	int i;
