@@ -14,6 +14,7 @@ LOG_MODULE_REGISTER(app);
 
 enum states {menu_state, shape_state, game_state};
 enum game_movements {stop,left,right,up,down};
+enum shapes {nothing, circle,tick, line, clear};
 
 const struct device *display_dev;
 static lv_point_t line_points[] = {{0, 2}, {5, 7}, {0, 12}};
@@ -21,7 +22,6 @@ static lv_point_t Game_line_points[] = {{1, 1}, {2, 1}};
 
 lv_obj_t *menu_1_label;
 lv_obj_t *menu_2_label;
-int count=0;
 int menu_1_label_x = 0 , menu_1_label_y = 0;
 int menu_2_label_x = 0, menu_2_label_y = 15;
 int menu_1_offset_x = 0 , menu_1_offset_y = 0;
@@ -31,6 +31,17 @@ lv_obj_t * menu_line;
 lv_obj_t * Game_line;
 int x=0,y=0;
 
+//static lv_point_t square_points[] = {{0, 0}, {20, 0}, {20, 10}, {0, 10},{0,0}};
+static lv_point_t no_point[] = {{0,0},{0,0}};
+static lv_point_t tick_points[] = {{0, 0}, {20, 0}, {20, 10}};
+static lv_point_t line_shape_points[] = {{0, 10}, {127, 10}};
+
+lv_obj_t * tick_shape;
+lv_obj_t * circle_shape;
+lv_obj_t * line_shape;
+lv_obj_t * no_shape;
+
+int count=0;
 
 void initialise_display(void)
 {
@@ -60,16 +71,35 @@ void create_menu_screen(void)
 
 void create_game_screen(void)
 {
-    
     Game_line = lv_line_create(lv_scr_act());
     lv_line_set_points(Game_line, Game_line_points, 2);     /*Set the points*/
 	lv_obj_align(Game_line, LV_ALIGN_TOP_LEFT, 0, 0);
 }
 
+void create_shape_screen(void)
+{
+	 
+	 //no_shape = lv_line_create(lv_scr_act());
+	 //lv_line_set_points(no_shape, no_point, 2);     /*Set the points*/
+	 //lv_obj_center(no_shape);
+	 no_shape = lv_label_create(lv_scr_act());
+	 lv_label_set_text(no_shape, " ");
+	 lv_obj_center(no_shape);
+	//  tick_shape = lv_line_create(lv_scr_act());
+    //  lv_line_set_points(tick_shape, tick_points, 3);     /*Set the points*/
+	//  lv_obj_center(tick_shape);
+
+	 line_shape = lv_line_create(lv_scr_act());
+     lv_line_set_points(line_shape, line_shape_points, 2);     /*Set the points*/
+	 lv_obj_align(line_shape, LV_ALIGN_TOP_LEFT, 0, 0); 
+	
+}
+
 void create_screens(void)
 {
     create_menu_screen();
-    create_game_screen();
+    //create_game_screen();
+	//create_shape_screen();
     	
 }
 
@@ -111,9 +141,9 @@ void update_game_screen(void)
 				break;
 		case right: lv_obj_align(Game_line, LV_ALIGN_TOP_LEFT, x, y);
 				x++;
-				if(x > 127)
+				if(x > 126)
 				{
-					x = 127;
+					x = 126;
 				}
 				break;
 		case down: lv_obj_align(Game_line, LV_ALIGN_TOP_LEFT, x, y);
@@ -136,8 +166,34 @@ void update_game_screen(void)
 	}    
 }
 
+void update_shape_screen(void)
+{
+    if(shape == nothing)
+	{
+
+	}
+	if(shape == circle)
+	{
+
+	}
+	if(shape == line)
+	{
+
+	}
+	if(shape == tick)
+	{
+
+	}
+	if(shape == clear)
+	{
+
+	}
+    
+}
+
 void update_screen(void)
 {
+	//printf("%d\n", state);
     if(state == menu_state)
 	{	
 		update_menu_screen();
@@ -145,6 +201,10 @@ void update_screen(void)
     if(state == game_state)
     {
         update_game_screen();
-
     }
+	if(state == shape_state)
+    {
+        update_shape_screen();
+    }
+
 }

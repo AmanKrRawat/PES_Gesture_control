@@ -17,36 +17,46 @@
 
 enum states {menu_state, shape_state, game_state};
 enum game_movements {stop,left,right,up,down};
+enum shapes {nothing, circle, tick, line, clear};
 
-int state = game_state;
-int current_menu=0;
+int state = menu_state;
+int current_menu = 0;
 int game_move = stop;
+int shape = nothing;
 
 void handle_data(char value)
 {
 	if(state == menu_state)
 	{
-		if(value == 'A')
-		{
-			printk("state %d value %d\n" , state, value);
-			current_menu = 1;
-		}
-		if(value == 'B')
+		if(value == 'U')
 		{
 			printk("state %d value %d\n" , state, value);
 			current_menu = 0;
+		}
+		if(value == 'D')
+		{
+			printk("state %d value %d\n" , state, value);
+			current_menu = 1;
 		}
 		if(value == 'C')
 		{
 			printk("state %d value %d\n" , state, value);
 			if(current_menu == 1)
+			{
 				state = game_state;
-			if(current_menu == 0)
+				lv_obj_clean(lv_scr_act());
+				create_game_screen();
+			}
+			else if(current_menu == 0)
+			{
 				state = shape_state;
+				lv_obj_clean(lv_scr_act());
+				create_shape_screen();
+			}
 		}
 
 	}
-	if(state == game_state)
+	else if(state == game_state)
 	{
 		switch(value)
 		{
@@ -62,23 +72,39 @@ void handle_data(char value)
 			case 'D':	printk("state %d value %d\n" , state, value);
 						game_move = down;
 						break;
-			case 'S':	printk("state %d value %d\n" , state, value);
+			case 'C':	printk("state %d value %d\n" , state, value);
 						game_move = stop;
 						break;
 			case 'B':	printk("state %d value %d\n" , state, value);
 						game_move = stop;
 						state = menu_state;
+						current_menu = 0;
+						lv_obj_clean(lv_scr_act());
+						create_menu_screen();
 						break;
 		}
 	}
-	if(state == shape_state)
+	else if(state == shape_state)
 	{
 		switch(value){
-			case 'S': break;
-			case 'R': break;
-			case 'L': break;
-			case 'C': break;
-			case 'B': break;
+			case 'O': shape = circle; 
+			lv_disp_load_scr(circle_shape);
+				break;
+			case 'T': shape = tick;
+			lv_disp_load_scr(tick_shape);
+				break;
+			case 'L': shape = line;
+			lv_disp_load_scr(line_shape);
+				break;
+			case 'C': shape = clear;
+			lv_disp_load_scr(no_shape);
+				break;
+			case 'B': shape = clear;
+				state = menu_state;
+				lv_obj_clean(lv_scr_act());
+				create_menu_screen();
+				break;
+			default : shape = nothing;
 		}
 	}
 }
