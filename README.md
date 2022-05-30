@@ -1,6 +1,7 @@
 # PES_Vis_Pow_Algo
 
 Flash the boards with the project:
+
 First connect the boards with the sensor and the OLED screen.
 
 MPU6050 side:
